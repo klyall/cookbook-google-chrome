@@ -1,6 +1,6 @@
 #
 # Cookbook Name:: google-chrome
-# Recipe:: default
+# Recipe:: rhel
 #
 # # Copyright 2011, willdom
 #
@@ -17,13 +17,18 @@
 # limitations under the License.
 #
 
-case node['platform_family']
-when 'debian'
-  include_recipe 'google-chrome::debian'
-when 'rhel'
-  include_recipe 'google-chrome::rhel'
-end  
+include_recipe "yum"
 
-package node['google-chrome']['name'] do
-    action :install
+chrome_key = 'google-chrome'
+
+yum_key chrome_key do
+  url node["google-chrome"]["key"]
+  action :add
+end
+
+yum_repository 'google-chrome' do
+  description "Google Chrome"
+  url node['google-chrome']['yum_repo']
+  key chrome_key
+  action :add
 end

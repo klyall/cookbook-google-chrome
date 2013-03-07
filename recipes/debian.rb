@@ -1,6 +1,6 @@
 #
 # Cookbook Name:: google-chrome
-# Recipe:: default
+# Recipe:: debian
 #
 # # Copyright 2011, willdom
 #
@@ -16,14 +16,18 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
+ 
+include_recipe "apt"
 
-case node['platform_family']
-when 'debian'
-  include_recipe 'google-chrome::debian'
-when 'rhel'
-  include_recipe 'google-chrome::rhel'
-end  
-
-package node['google-chrome']['name'] do
-    action :install
+apt_repository "google-chrome" do
+    uri node['google-chrome']['apt_repo']
+    distribution "stable"
+    components ["main"]
+    key node['google-chrome']['key']
+    action :add
 end
+
+execute "sudo apt-get update" do
+    action :run
+end
+
