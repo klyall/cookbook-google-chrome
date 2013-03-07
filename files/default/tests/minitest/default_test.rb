@@ -7,7 +7,7 @@ describe_recipe 'google-chrome' do
   include MiniTest::Chef::Resources
 
   it "installs google-chrome" do
-    `which google-chrome`.must_match(/google-chrome/)
+    package('google-chrome-stable').must_be_installed
   end
 
 end
